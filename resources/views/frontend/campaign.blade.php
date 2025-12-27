@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>{{ $campaign_data->name }}</title>
-{{--    <link rel="shortcut icon" href="{{asset($generalsetting->favicon)}}" type="image/x-icon" />--}}
+    {{--    <link rel="shortcut icon" href="{{asset($generalsetting->favicon)}}" type="image/x-icon" />--}}
     <!-- fot awesome -->
-    <link rel="stylesheet" href="{{ asset('frontend/campaign/css/all.css') }}" />
+    <link rel="stylesheet" href="{{ asset('frontend/campaign/css/all.css') }}"/>
     <!-- core css -->
-    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/bootstrap.min.css" />
-    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/animate.css" />
+    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/bootstrap.min.css"/>
+    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/animate.css"/>
     <!-- owl carousel -->
-    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/owl.theme.default.css" />
-    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/owl.carousel.min.css" />
+    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/owl.theme.default.css"/>
+    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/owl.carousel.min.css"/>
     <!-- owl carousel -->
-    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/select2.min.css" />
+    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/select2.min.css"/>
     <!-- common css -->
-    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/style.css" />
-    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/responsive.css" />
+    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/style.css"/>
+    <link rel="stylesheet" href="{{ asset('frontend/campaign/css') }}/responsive.css"/>
     @php
         $pixelCount = isset($pixels) ? count($pixels) : 0;
         $pixelsExists = isset($pixels);
@@ -45,13 +45,23 @@
             console.log('[Facebook Pixel] Pixel ID: {{ $pixel->code }}');
             @endforeach
 
-                !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                n.queue=[];t=b.createElement(e);t.async=!0;
-                t.src=v;s=b.getElementsByTagName(e)[0];
-                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                !function (f, b, e, v, n, t, s) {
+                if (f.fbq) return;
+                n = f.fbq = function () {
+                    n.callMethod ?
+                        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                };
+                if (!f._fbq) f._fbq = n;
+                n.push = n;
+                n.loaded = !0;
+                n.version = '2.0';
+                n.queue = [];
+                t = b.createElement(e);
+                t.async = !0;
+                t.src = v;
+                s = b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t, s)
+            }(window, document, 'script',
                 'https://connect.facebook.net/en_US/fbevents.js');
 
             console.log('[Facebook Pixel] Pixel script loading...');
@@ -67,7 +77,7 @@
                     try {
                         fbq('init', '{{ $pixel->code }}');
                         console.log('[Facebook Pixel] ✓ Pixel {{ $pixel->code }} initialized');
-                    } catch(e) {
+                    } catch (e) {
                         console.error('[Facebook Pixel] ✗ Error initializing pixel {{ $pixel->code }}:', e);
                     }
                     @endforeach
@@ -76,7 +86,7 @@
                     try {
                         fbq('track', 'PageView');
                         console.log('[Facebook Pixel] ✓ PageView event fired successfully');
-                    } catch(e) {
+                    } catch (e) {
                         console.error('[Facebook Pixel] ✗ Error firing PageView:', e);
                     }
                 } else {
@@ -93,7 +103,7 @@
             // Try multiple times to ensure pixel loads
             var attempts = 0;
             var maxAttempts = 10;
-            var checkInterval = setInterval(function() {
+            var checkInterval = setInterval(function () {
                 attempts++;
                 if (typeof fbq !== 'undefined') {
                     clearInterval(checkInterval);
@@ -106,8 +116,8 @@
             }, 200);
 
             // Also try after page load
-            window.addEventListener('load', function() {
-                setTimeout(function() {
+            window.addEventListener('load', function () {
+                setTimeout(function () {
                     if (typeof fbq === 'undefined') {
                         console.error('[Facebook Pixel] ✗ Pixel still not loaded after page load');
                     }
@@ -127,27 +137,27 @@
         </script>
     @endif
 
-    <meta name="app-url" content="{{route('campaign',$campaign_data->slug)}}" />
-    <meta name="robots" content="index, follow" />
-    <meta name="description" content="{{$campaign_data->description}}" />
-    <meta name="keywords" content="{{ $campaign_data->slug }}" />
+    <meta name="app-url" content="{{route('campaign',$campaign_data->slug)}}"/>
+    <meta name="robots" content="index, follow"/>
+    <meta name="description" content="{{$campaign_data->description}}"/>
+    <meta name="keywords" content="{{ $campaign_data->slug }}"/>
 
     <!-- Twitter Card data -->
-    <meta name="twitter:card" content="product" />
-    <meta name="twitter:site" content="{{$campaign_data->name}}" />
-    <meta name="twitter:title" content="{{$campaign_data->name}}" />
-    <meta name="twitter:description" content="{{ $campaign_data->description}}" />
-    <meta name="twitter:creator" content="hellodinajpur.com" />
-    <meta property="og:url" content="{{route('campaign',$campaign_data->slug)}}" />
-    <meta name="twitter:image" content="{{asset($campaign_data->image_one)}}" />
+    <meta name="twitter:card" content="product"/>
+    <meta name="twitter:site" content="{{$campaign_data->name}}"/>
+    <meta name="twitter:title" content="{{$campaign_data->name}}"/>
+    <meta name="twitter:description" content="{{ $campaign_data->description}}"/>
+    <meta name="twitter:creator" content="hellodinajpur.com"/>
+    <meta property="og:url" content="{{route('campaign',$campaign_data->slug)}}"/>
+    <meta name="twitter:image" content="{{asset($campaign_data->image_one)}}"/>
 
     <!-- Open Graph data -->
-    <meta property="og:title" content="{{$campaign_data->name}}" />
-    <meta property="og:type" content="product" />
-    <meta property="og:url" content="{{route('campaign',$campaign_data->slug)}}" />
-    <meta property="og:image" content="{{asset($campaign_data->image_one)}}" />
-    <meta property="og:description" content="{{ $campaign_data->description}}" />
-    <meta property="og:site_name" content="{{$campaign_data->name}}" />
+    <meta property="og:title" content="{{$campaign_data->name}}"/>
+    <meta property="og:type" content="product"/>
+    <meta property="og:url" content="{{route('campaign',$campaign_data->slug)}}"/>
+    <meta property="og:image" content="{{asset($campaign_data->image_one)}}"/>
+    <meta property="og:description" content="{{ $campaign_data->description}}"/>
+    <meta property="og:site_name" content="{{$campaign_data->name}}"/>
 
     @if(!empty($gtm_code) && count($gtm_code) > 0)
         <!-- Google Tag Manager -->
@@ -160,11 +170,19 @@
                 $gtmId = str_replace('GTM-', '', $gtm->code);
             @endphp
             <script>
-                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                })(window,document,'script','dataLayer','GTM-{{ $gtmId }}');
+                (function (w, d, s, l, i) {
+                    w[l] = w[l] || [];
+                    w[l].push({
+                        'gtm.start':
+                            new Date().getTime(), event: 'gtm.js'
+                    });
+                    var f = d.getElementsByTagName(s)[0],
+                        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+                    j.async = true;
+                    j.src =
+                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                    f.parentNode.insertBefore(j, f);
+                })(window, document, 'script', 'dataLayer', 'GTM-{{ $gtmId }}');
             </script>
         @endforeach
         <!-- End Google Tag Manager -->
@@ -174,9 +192,11 @@
         .selected {
             border: 2px solid green; /* Change border color to green */
         }
+
         .countdown-container {
             text-align: center;
         }
+
         .counter-card {
             border: 2px dotted white; /* Dotted border */
             border-radius: 15px; /* Rounded corners */
@@ -186,16 +206,19 @@
             text-align: center; /* Center the text within each card */
 
         }
-        .counter-card div{
+
+        .counter-card div {
             font-size: 1.2em;
-            font-weight:bolder;
-            color:white;
+            font-weight: bolder;
+            color: white;
         }
+
         .counter-card span {
             display: block; /* Make the span block-level for better spacing */
             font-size: 0.8em; /* Font size for labels */
-            color:orange;
+            color: orange;
         }
+
         @keyframes colorAnimation {
             0% {
                 color: pink; /* Start with pink */
@@ -218,19 +241,23 @@
 
 
         }
-        .form_inn{
-            padding:10px;
+
+        .form_inn {
+            padding: 10px;
         }
+
         @media (max-width: 992px) {
-            .campro_inn,.cont_inner,.cont_num ,.discount_inn{
-                padding: 10px!important; /* Add 10px padding for tablet and smaller devices */
+            .campro_inn, .cont_inner, .cont_num, .discount_inn {
+                padding: 10px !important; /* Add 10px padding for tablet and smaller devices */
                 width: 100%;
             }
-            .discount_inn{
-                margin:10px 0 0 0;
+
+            .discount_inn {
+                margin: 10px 0 0 0;
             }
-            .campro_inn h2{
-                font-size:20px;
+
+            .campro_inn h2 {
+                font-size: 20px;
             }
         }
 
@@ -246,7 +273,6 @@
             transform: scale(1.05);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
-
 
 
     </style>
@@ -288,21 +314,22 @@
         }
     </style>
 
-{{--    {!! $generalsetting->header_code !!}--}}
+    {{--    {!! $generalsetting->header_code !!}--}}
 </head>
 
 <body>
 @php
-//    $subtotal = Cart::instance('shopping')->subtotal();
-//    $subtotal=str_replace(',','',$subtotal);
-//    $subtotal=str_replace('.00', '',$subtotal);
-//    $shipping = Session::get('shipping')?Session::get('shipping'):0;
+    //    $subtotal = Cart::instance('shopping')->subtotal();
+    //    $subtotal=str_replace(',','',$subtotal);
+    //    $subtotal=str_replace('.00', '',$subtotal);
+    //    $shipping = Session::get('shipping')?Session::get('shipping'):0;
 @endphp
 <section style="background-image: radial-gradient(at center center, #139525 28%, #0E320F 79%)">
     <div class="container py-2 py-md-4">
         <div class="row gy-2">
             <div class="col-md-7">
-                <h4 class="text-light text-center py-2 py-md-4 fw-bolder">{!! $campaign_data->top_title_1  !!} <span class="text-warning"> {!! $campaign_data->top_title_2  !!}</span> </h4>
+                <h4 class="text-light text-center py-2 py-md-4 fw-bolder">{!! $campaign_data->top_title_1  !!} <span
+                        class="text-warning"> {!! $campaign_data->top_title_2  !!}</span></h4>
             </div>
             <div class="col-md-5">
                 <div class="countdown-container">
@@ -349,7 +376,8 @@
 
 <div class="col-sm-12">
     <div class="ord_btn">
-        <a href="#order_form" class="cam_order_now" id="cam_order_now"> অর্ডার করতে ক্লিক করুন <i class="fa-solid fa-hand-point-right"></i> </a>
+        <a href="#order_form" class="cam_order_now" id="cam_order_now"> অর্ডার করতে ক্লিক করুন <i
+                class="fa-solid fa-hand-point-right"></i> </a>
     </div>
 </div>
 <section>
@@ -357,12 +385,12 @@
         <div class="row gy-2">
             @if($campaign_data->image_one)
                 <div class="col-sm-6">
-                    <img class="img-fluid shadow" src="{{asset('uploads/'.$campaign_data->image_one)}}" >
+                    <img class="img-fluid shadow" src="{{asset('uploads/'.$campaign_data->image_one)}}">
                 </div>
             @endif
             @if($campaign_data->image_two)
                 <div class="col-sm-6">
-                    <img class="img-fluid shadow" src="{{asset('uploads/'.$campaign_data->image_two)}}" >
+                    <img class="img-fluid shadow" src="{{asset('uploads/'.$campaign_data->image_two)}}">
                 </div>
             @endif
         </div>
@@ -409,19 +437,24 @@
 
             <div class="row justify-content-center gy-2 gy-md-4">
                 <div class="col-md-8">
-                    <h2 class="p-2 py-md-3 rounded text-center" style="background-color:black;border:green 2px solid;color:white;font-weight:bolder">প্রডাক্টের "ভিডিও দেখুন"</h2>
+                    <h2 class="p-2 py-md-3 rounded text-center"
+                        style="background-color:black;border:green 2px solid;color:white;font-weight:bolder">প্রডাক্টের
+                        "ভিডিও দেখুন"</h2>
                 </div>
                 <div class="col-md-8 col-sm-12">
                     <div class="camp_vid rounded" style="border:5px solid red">
                         <iframe width="100%" height="480"
                                 src="https://www.youtube.com/embed/{{$campaign_data->video}}"
-                                title="{{$campaign_data->banner_title}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="">
+                                title="{{$campaign_data->banner_title}}" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen="">
                         </iframe>
                     </div>
                 </div>
                 <div class="col-sm-12">
                     <div class="ord_btn">
-                        <a href="#order_form" class="cam_order_now" id="cam_order_now"> অর্ডার করতে ক্লিক করুন <i class="fa-solid fa-hand-point-right"></i> </a>
+                        <a href="#order_form" class="cam_order_now" id="cam_order_now"> অর্ডার করতে ক্লিক করুন <i
+                                class="fa-solid fa-hand-point-right"></i> </a>
                     </div>
                 </div>
             </div>
@@ -433,12 +466,13 @@
     <div class="container my-2 my-md-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <h2 class="text-center p-2 p-md-4 rounded" style="background-color:#FBEFF7;border:2px dashed #F1ACE7">আমাদের থেকে বিস্তারিত জানতে এই নাম্বারে কল করুন {{maanAppearance('hotline_number') ?? 'N/A'}}</h2>
+                <h2 class="text-center p-2 p-md-4 rounded" style="background-color:#FBEFF7;border:2px dashed #F1ACE7">
+                    আমাদের থেকে বিস্তারিত জানতে এই নাম্বারে কল করুন {{maanAppearance('hotline_number') ?? 'N/A'}}</h2>
                 <div class="row justify-content-center my-2 my-md-4 gy-2">
                     <div class="col-md-6 custom_btn">
                         <div class="shadow-lg">
                             <a href="tel:{{ maanAppearance('hotline_number') ?? 'N/A'}}"
-                               class="btn btn-danger btn-lg d-block py-md-3 fs-2 fw-bolder button-3d button-animated-border" >
+                               class="btn btn-danger btn-lg d-block py-md-3 fs-2 fw-bolder button-3d button-animated-border">
                                 <i class="fa-solid fa-phone"></i> আমাদের কল করুন </a>
                         </div>
 
@@ -454,7 +488,8 @@
                     </div>
                 </div>
 
-                <h2 class="text-center p-2 p-md-4 rounded" style="background-color:#FBEFF7;border:2px dashed #F1ACE7">{!! $campaign_data->heading_4 !!}</h2>
+                <h2 class="text-center p-2 p-md-4 rounded"
+                    style="background-color:#FBEFF7;border:2px dashed #F1ACE7">{!! $campaign_data->heading_4 !!}</h2>
 
             </div>
         </div>
@@ -509,7 +544,8 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                     </div>
                     <div class="col-sm-12">
                         <div class="ord_btn">
-                            <a href="#order_form" class="cam_order_now" id="cam_order_now"> অর্ডার করতে ক্লিক করুন <i class="fa-solid fa-hand-point-right"></i> </a>
+                            <a href="#order_form" class="cam_order_now" id="cam_order_now"> অর্ডার করতে ক্লিক করুন <i
+                                    class="fa-solid fa-hand-point-right"></i> </a>
                         </div>
                     </div>
                 </div>
@@ -537,7 +573,8 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                     </div>
                     <div class="col-sm-12">
                         <div class="ord_btn">
-                            <a href="#order_form" class="cam_order_now" id="cam_order_now"> অর্ডার করতে ক্লিক করুন <i class="fa-solid fa-hand-point-right"></i> </a>
+                            <a href="#order_form" class="cam_order_now" id="cam_order_now"> অর্ডার করতে ক্লিক করুন <i
+                                    class="fa-solid fa-hand-point-right"></i> </a>
                         </div>
                     </div>
                 </div>
@@ -554,7 +591,8 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                     <div class="col-sm-12">
                         <div class="row">
                             <div class="col-sm-12">
-                                <h2 class="campaign_offer">অফারটি সীমিত সময়ের জন্য, তাই অফার শেষ হওয়ার আগেই অর্ডার করুন</h2>
+                                <h2 class="campaign_offer">অফারটি সীমিত সময়ের জন্য, তাই অফার শেষ হওয়ার আগেই অর্ডার
+                                    করুন</h2>
                                 @if($campaign_data->note)
                                     <p class="my-1 text-center">
                                         {!! $campaign_data->note !!}
@@ -573,15 +611,45 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                                             </div>
                                             <div class="card-body">
                                                 <div class="row g-2">
+                                                    @php
+                                                        $firstProduct = null;
+                                                        $shipping_areas = \App\Models\ShippingArea::where('status', 1)->orderBy('id', 'asc')->get();
+                                                    @endphp
                                                     @foreach($products as $product)
-                                                        <div class="col-md-3 col-6"> <!-- Adjusted column width for smaller cards -->
-                                                            <div class="border shadow"> <!-- Wrap the card with form-check for better usability -->
-                                                                <input type="radio" class="form-check-input" name="product" id="product_{{ $product->id }}" value="{{ $product->id }}" {{ $loop->first ? 'checked' : '' }} style="display: none;" onchange="updateCart('{{ $product->id }}')">
-                                                                <label for="product_{{ $product->id }}" class="card shadow-sm product-card {{ $loop->first ? 'selected' : '' }}" style="cursor: pointer;"> <!-- Add class for styling -->
-                                                                    <img src="{{ asset('uploads/products/galleries/'.$product->image->image) }}" class="card-img-top" alt="{{ $product->name }}" style="height: 100px; object-fit: cover;"> <!-- Fixed height and object-fit -->
-                                                                    <div class="card-body p-1 text-center"> <!-- Centered text for a better layout -->
+                                                        @php
+                                                            $firstProduct = $products[0]
+                                                        @endphp
+                                                        <div class="col-md-3 col-6">
+                                                            <!-- Adjusted column width for smaller cards -->
+                                                            <div class="border shadow">
+                                                                <!-- Wrap the card with form-check for better usability -->
+                                                                <input type="radio"
+                                                                       name="product"
+                                                                       id="product_{{ $product->id }}"
+                                                                       value="{{ $product->id }}"
+                                                                       {{ $loop->first ? 'checked' : '' }}
+                                                                       style="display:none"
+
+                                                                       data-name="{{ $product->name }}"
+                                                                       data-slug="{{ $product->slug }}"
+                                                                       data-price="{{ $product->sale_price }}"
+                                                                       data-image="{{ asset('uploads/products/galleries/'.$product->image->image) }}"
+
+                                                                       onchange="updateCart(this)"
+                                                                >
+                                                                <label for="product_{{ $product->id }}"
+                                                                       class="card shadow-sm product-card {{ $loop->first ? 'selected' : '' }}"
+                                                                       style="cursor:pointer">
+
+                                                                    <img src="{{ asset('uploads/products/galleries/'.$product->image->image) }}"
+                                                                         class="card-img-top"
+                                                                         style="height:100px;object-fit:cover">
+
+                                                                    <div class="card-body p-1 text-center">
                                                                         <div class="card-title">{{ Str::limit($product->name, 20) }}</div>
-                                                                        <div class="card-text mb-1">৳{{ $product->purchase_price }} <del>৳{{ $product->sale_price }}</del></div>
+                                                                        <div class="card-text mb-1">
+                                                                            ৳{{ $product->sale_price }}
+                                                                        </div>
                                                                     </div>
                                                                 </label>
                                                             </div>
@@ -596,7 +664,8 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                                             <h5 class="potro_font">পণ্যের বিবরণ </h5>
                                         </div>
                                         <div class="card-body cartlist  table-responsive">
-                                            <table class="cart_table table table-bordered table-striped text-center mb-0">
+                                            <table
+                                                class="cart_table table table-bordered table-striped text-center mb-0">
                                                 <thead>
                                                 <tr>
 
@@ -607,95 +676,110 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                                                 </thead>
 
                                                 <tbody>
-                                                @php
-                                                    $cartExists = class_exists(\Gloudemans\Shoppingcart\Facades\Cart::class);
-                                                @endphp
-                                                @if($cartExists && Cart::instance('shopping')->count() > 0)
-                                                    @foreach(Cart::instance('shopping')->content() as $value)
-                                                        <tr>
+                                                @if(!empty($firstProduct))
+                                                    <tr>
+                                                        <td class="text-left">
+                                                            <a id="cart_product_link" style="font-size: 14px;" href="{{route('product',$firstProduct->slug)}}">
+                                                                <img id="cart_product_img" src="{{ asset('uploads/products/galleries/'.$firstProduct->image->image) }}" height="30" width="30"> {{Str::limit($value->name,20)}}
+                                                            </a>
 
-                                                            <td class="text-left">
-                                                                <a style="font-size: 14px;" href="{{route('product',$value->options->slug)}}"><img src="{{asset($value->options->image)}}" height="30" width="30"> {{Str::limit($value->name,20)}}</a>
-                                                                @php
-                                                                    $product = App\Models\Product::find($value->id);
-                                                                @endphp
+{{--                                                            @if($firstProduct && ($firstProduct->productstock->color->isNotEmpty() || $firstProduct->productstock->size->isNotEmpty()))--}}
+{{--                                                                <div class="row g-1 mt-2">--}}
+{{--                                                                    <!-- Size Selector -->--}}
+{{--                                                                    @if($product->productstock->size->isNotEmpty())--}}
+{{--                                                                        <div class="col-6">--}}
 
-                                                                @if($product && ($product->sizes->isNotEmpty() || $product->colors->isNotEmpty()))
-                                                                    <div class="row g-1 mt-2">
-                                                                        <!-- Size Selector -->
-                                                                        @if($product->sizes->isNotEmpty())
-                                                                            <div class="col-6">
+{{--                                                                            <select id="size-selector-{{ $firstProduct->id }}" class="form-select form-select-sm cart-size-selector" data-id="{{ $firstProduct->id }}">--}}
+{{--                                                                                <option>Select an option</option>--}}
+{{--                                                                                @foreach($firstProduct->productstock as $pSize)--}}
+{{--                                                                                    <option value="{{ $pSize->size->name }}">--}}
+{{--                                                                                        {{ $pSize->size->name }}--}}
+{{--                                                                                    </option>--}}
+{{--                                                                                @endforeach--}}
+{{--                                                                            </select>--}}
+{{--                                                                            <label--}}
+{{--                                                                                for="size-selector-{{ $firstProduct->id }}"--}}
+{{--                                                                                class="form-label text-muted text-start"--}}
+{{--                                                                                style="font-size: 0.875rem;">--}}
+{{--                                                                                Size:--}}
+{{--                                                                                @if($value->options->product_size)--}}
+{{--                                                                                    {{$value->options->product_size}}--}}
+{{--                                                                                @endif--}}
+{{--                                                                            </label>--}}
+{{--                                                                        </div>--}}
+{{--                                                                    @endif--}}
 
-                                                                                <select id="size-selector-{{ $value->rowId }}" class="form-select form-select-sm cart-size-selector" data-id="{{ $value->rowId }}">
-                                                                                    <option>Select an option</option>
-                                                                                    @foreach($product->sizes as $size)
-                                                                                        <option value="{{ $size->sizeName }}" {{ $size->sizeName == $value->options->product_size ? 'selected' : '' }}>
-                                                                                            {{ $size->sizeName }}
-                                                                                        </option>
-                                                                                    @endforeach
-                                                                                </select>
-                                                                                <label for="size-selector-{{ $value->rowId }}" class="form-label text-muted text-start" style="font-size: 0.875rem;">Size:
-                                                                                    @if($value->options->product_size)
-                                                                                        {{$value->options->product_size}}
-                                                                                    @endif
-                                                                                </label>
-                                                                            </div>
-                                                                        @endif
+{{--                                                                    <!-- Color Selector -->--}}
+{{--                                                                    @if($firstProduct->productstock->color->isNotEmpty())--}}
+{{--                                                                        <div class="col-6">--}}
+{{--                                                                            <select--}}
+{{--                                                                                id="color-selector-{{ $firstProduct->rowId }}"--}}
+{{--                                                                                class="form-select form-select-sm cart-color-selector"--}}
+{{--                                                                                data-id="{{ $firstProduct->rowId }}">--}}
+{{--                                                                                <option>Select an option</option>--}}
+{{--                                                                                @foreach($firstProduct->productstock as $pColor)--}}
+{{--                                                                                    <option value="{{ $pColor->color->name }}">--}}
+{{--                                                                                        {{ $pColor->color->name }}--}}
+{{--                                                                                    </option>--}}
+{{--                                                                                @endforeach--}}
+{{--                                                                            </select>--}}
+{{--                                                                            <label--}}
+{{--                                                                                for="color-selector-{{ $firstProduct->id }}"--}}
+{{--                                                                                class="form-label text-muted text-start"--}}
+{{--                                                                                style="font-size: 0.875rem;">Color:--}}
+{{--                                                                                @if($value->options->product_color)--}}
+{{--                                                                                    {{ $value->options->product_color }}--}}
+{{--                                                                                @endif--}}
+{{--                                                                            </label>--}}
+{{--                                                                        </div>--}}
+{{--                                                                    @endif--}}
+{{--                                                                </div>--}}
+{{--                                                            @endif--}}
+                                                        </td>
+                                                        <td width="15%" class="cart_qty">
+                                                            <div class="qty-cart vcart-qty">
+                                                                <div class="quantity">
+                                                                    <button class="minus cart_decrement">-</button>
 
-                                                                        <!-- Color Selector -->
-                                                                        @if($product->colors->isNotEmpty())
-                                                                            <div class="col-6">
-                                                                                <select id="color-selector-{{ $value->rowId }}" class="form-select form-select-sm cart-color-selector" data-id="{{ $value->rowId }}">
-                                                                                    <option>Select an option</option>
-                                                                                    @foreach($product->colors as $color)
-                                                                                        <option value="{{ $color->colorName }}" {{ $color->colorName == $value->options->product_color ? 'selected' : '' }}>
-                                                                                            {{ $color->colorName }}
-                                                                                        </option>
-                                                                                    @endforeach
-                                                                                </select>
-                                                                                <label for="color-selector-{{ $value->rowId }}" class="form-label text-muted text-start" style="font-size: 0.875rem;">Color:
-                                                                                    @if($value->options->product_color)
-                                                                                        {{ $value->options->product_color }}
-                                                                                    @endif
-                                                                                </label>
-                                                                            </div>
-                                                                        @endif
-                                                                    </div>
-                                                                @endif
-                                                            </td>
-                                                            <td width="15%" class="cart_qty">
-                                                                <div class="qty-cart vcart-qty">
-                                                                    <div class="quantity">
-                                                                        <button class="minus cart_decrement"  data-id="{{$value->rowId}}">-</button>
-                                                                        <input type="text" value="{{$value->qty}}" readonly />
-                                                                        <button class="plus  cart_increment" data-id="{{$value->rowId}}">+</button>
-                                                                    </div>
+                                                                    <input type="text"
+                                                                           id="cart_qty"
+                                                                           value="1"
+                                                                           readonly
+                                                                           data-price="{{ $firstProduct->sale_price }}" />
+
+                                                                    <button class="plus cart_increment">+</button>
                                                                 </div>
-                                                            </td>
-                                                            <td>৳{{$value->price*$value->qty}}</td>
-                                                        </tr>
-                                                    @endforeach
+                                                            </div>
+                                                        </td>
+                                                        <td>৳ <span id="unit_price">{{$firstProduct->sale_price}}</span></td>
+
+                                                    </tr>
                                                 @endif
                                                 </tbody>
                                                 <tfoot>
-                                                <tr>
-                                                    <th colspan="2" class="text-end px-4">মোট</th>
-                                                    <td>
-                                                        <span id="net_total"><span class="alinur">৳ </span><strong>{{$subtotal ?? 'N/A'}}</strong></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th colspan="2" class="text-end px-4">ডেলিভারি চার্জ</th>
-                                                    <td>
-                                                        <span id="cart_shipping_cost"><span class="alinur">৳ </span><strong>{{$shipping ?? 'N/A'}}</strong></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th colspan="2" class="text-end px-4">সর্বমোট</th>
-                                                    <td>
-                                                        <span id="grand_total"><span class="alinur">৳ </span><strong>{{ ($subtotal ?? 0) + ($shipping ?? 0) }}</strong></span>
-                                                    </td>
-                                                </tr>
+                                                    <tr>
+                                                        <th colspan="2" class="text-end px-4">মোট</th>
+                                                        <td>
+                                                            ৳ <strong id="net_total">{{ $firstProduct->sale_price ?? 0 }}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    @php
+                                                        $getFirstCharge = !empty( $shipping_areas[0]) ?  $shipping_areas[0]->charge : 70
+                                                    @endphp
+                                                    <tr>
+                                                        <th colspan="2" class="text-end px-4">ডেলিভারি চার্জ</th>
+                                                        <td>
+                                                            ৳ <strong id="shipping_cost">{{ $getFirstCharge }}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th colspan="2" class="text-end px-4">সর্বমোট</th>
+                                                        <td>
+                                                            ৳ <strong id="grand_total">
+                                                                {{ ($firstProduct->sale_price ?? 0) + ($getFirstCharge ?? 0) }}
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
                                                 </tfoot>
                                             </table>
 
@@ -705,18 +789,22 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                             </div>
                             <div class="col-lg-5 cus-order-2">
                                 <div class="checkout-shipping" id="order_form">
-                                    <form action="{{route('customer.ordersave')}}" method="POST" data-parsley-validate="">
+                                    <form action="{{route('customer.ordersave')}}" method="POST"
+                                          data-parsley-validate="">
                                         @csrf
                                         <div class="card">
                                             <div class="card-header">
-                                                <h5 class="potro_font">আপনার ইনফরমেশন দিন  </h5>
+                                                <h5 class="potro_font">আপনার ইনফরমেশন দিন </h5>
                                             </div>
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <div class="form-group mb-3">
                                                             <label for="name">আপনার নাম লিখুন * </label>
-                                                            <input type="text" id="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}" placeholder="নাম" required>
+                                                            <input type="text" id="name"
+                                                                   class="form-control @error('name') is-invalid @enderror"
+                                                                   name="name" value="{{old('name')}}" placeholder="নাম"
+                                                                   required>
                                                             @error('name')
                                                             <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -728,7 +816,13 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                                                     <div class="col-sm-12">
                                                         <div class="form-group mb-3">
                                                             <label for="phone">আপনার মোবাইল লিখুন *</label>
-                                                            <input type="number" minlength="11" id="number" maxlength="11" pattern="0[0-9]+" title="please enter number only and 0 must first character" title="Please enter an 11-digit number." id="phone" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{old('phone')}}" placeholder="+৮৮ বাদে ১১ সংখ্যা "  required>
+                                                            <input type="number" minlength="11" id="number"
+                                                                   maxlength="11" pattern="0[0-9]+"
+                                                                   title="please enter number only and 0 must first character"
+                                                                   title="Please enter an 11-digit number." id="phone"
+                                                                   class="form-control @error('phone') is-invalid @enderror"
+                                                                   name="phone" value="{{old('phone')}}"
+                                                                   placeholder="+৮৮ বাদে ১১ সংখ্যা " required>
                                                             @error('phone')
                                                             <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -739,29 +833,33 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                                                     <!-- col-end -->
                                                     <div class="col-sm-12">
                                                         <div class="form-group mb-3">
-                                                            <label for="address">আপনার ঠিকানা লিখুন   *</label>
-                                                            <input type="address" id="address" class="form-control @error('address') is-invalid @enderror" placeholder="জেলা, থানা, গ্রাম " name="address" value="{{old('address')}}"  required>
+                                                            <label for="address">আপনার ঠিকানা লিখুন *</label>
+                                                            <input type="address" id="address"
+                                                                   class="form-control @error('address') is-invalid @enderror"
+                                                                   placeholder="জেলা, থানা, গ্রাম " name="address"
+                                                                   value="{{old('address')}}" required>
                                                             @error('email')
                                                             <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
                                                             @enderror
                                                         </div>
                                                     </div>
-                                                    @php
-                                                        $shipping_areas = \App\Models\ShippingArea::where('status', 1)->orderBy('id', 'asc')->get();
-                                                    @endphp
                                                     <div class="col-sm-12">
                                                         <div class="form-group mb-3">
-                                                            <label for="area">আপনার এরিয়া সিলেক্ট করুন  *</label>
-                                                            <select type="area" id="area" class="form-control @error('area') is-invalid @enderror" name="area"   required>
+                                                            <label for="area">আপনার এরিয়া সিলেক্ট করুন *</label>
+                                                            <select type="area" id="area"
+                                                                    class="form-control @error('area') is-invalid @enderror"
+                                                                    name="area" required>
                                                                 @if(!empty($shipping_areas))
                                                                     @foreach($shipping_areas as $key=>$shipping_area)
-                                                                        <option value="{{$shipping_area->charge}}">{{ $shipping_area->name }} - {{ $shipping_area->charge }}</option>
+                                                                        <option
+                                                                            value="{{$shipping_area->charge}}">{{ $shipping_area->name }}
+                                                                            - {{ $shipping_area->charge }}</option>
                                                                     @endforeach
                                                                 @endif
                                                             </select>
-                                                            @error('email')
+                                                            @error('area')
                                                             <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -771,7 +869,9 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                                                     <!-- col-end -->
                                                     <div class="col-sm-12">
                                                         <div class="form-group">
-                                                            <button class="order_place order_place" type="submit">অর্ডার কন্ফার্ম করুন </button>
+                                                            <button class="order_place order_place" type="submit">অর্ডার
+                                                                কন্ফার্ম করুন
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -820,22 +920,23 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
     });
 </script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.select2').select2();
     });
 </script>
 <script>
     $("#area").on("change", function () {
-        var id = $(this).val();
-        $.ajax({
-            type: "GET",
-            data: { id: id },
-            url: "{{route('shipping.charge')}}",
-            dataType: "html",
-            success: function(response){
-                $('.cartlist').html(response);
-            }
-        });
+        let shippingCharge = parseFloat($(this).val());
+        let qty = parseInt($("#cart_qty").val());
+        let price = parseFloat($("#cart_qty").data("price"));
+
+        let netTotal = price * qty;
+        let grandTotal = netTotal + shippingCharge;
+
+        // Update UI
+        $("#shipping_cost").text(shippingCharge.toFixed(2));
+        $("#net_total").text(netTotal.toFixed(2));
+        $("#grand_total").text(grandTotal.toFixed(2));
     });
 </script>
 <script>
@@ -845,7 +946,7 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
         if (id) {
             $.ajax({
                 type: "GET",
-                data: { id: id },
+                data: {id: id},
                 url: "{{route('cart.remove')}}",
                 success: function (data) {
                     if (data) {
@@ -857,41 +958,35 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
             });
         }
     });
+
+    function updateTotals(qty) {
+        let price = parseFloat($("#cart_qty").data("price"));
+        let shipping = parseFloat($("#shipping_cost").text());
+
+        let netTotal = price * qty;
+        let grandTotal = netTotal + shipping;
+
+        $("#net_total").text(netTotal.toFixed(2));
+        $("#grand_total").text(grandTotal.toFixed(2));
+    }
+
     $(".cart_increment").on("click", function () {
-        var id = $(this).data("id");
-        $("#loading").show();
-        if (id) {
-            $.ajax({
-                type: "GET",
-                data: { id: id },
-                url: "{{route('cart.increment')}}",
-                success: function (data) {
-                    if (data) {
-                        $(".cartlist").html(data);
-                        $("#loading").hide();
-                        return cart_count() + mobile_cart();
-                    }
-                },
-            });
-        }
+        let qtyInput = $("#cart_qty");
+        let qty = parseInt(qtyInput.val()) + 1;
+
+        qtyInput.val(qty);
+        updateTotals(qty);
     });
 
+
     $(".cart_decrement").on("click", function () {
-        var id = $(this).data("id");
-        $("#loading").show();
-        if (id) {
-            $.ajax({
-                type: "GET",
-                data: { id: id },
-                url: "{{route('cart.decrement')}}",
-                success: function (data) {
-                    if (data) {
-                        $(".cartlist").html(data);
-                        $("#loading").hide();
-                        return cart_count() + mobile_cart();
-                    }
-                },
-            });
+        let qtyInput = $("#cart_qty");
+        let qty = parseInt(qtyInput.val());
+
+        if (qty > 1) {
+            qty--;
+            qtyInput.val(qty);
+            updateTotals(qty);
         }
     });
 
@@ -958,7 +1053,7 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
     const deadline = new Date("{{ $campaign_data->deadline }}").getTime();
 
     // Update the countdown every 1 second
-    const x = setInterval(function() {
+    const x = setInterval(function () {
         // Get current date and time
         const now = new Date().getTime();
 
@@ -984,7 +1079,7 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
         }
     }, 1000);
     // Event listener for size selector change
-    $('.cart-size-selector').on('change', function() {
+    $('.cart-size-selector').on('change', function () {
         var rowId = $(this).data('id'); // Get the row ID
         var selectedSize = $(this).val(); // Get the selected size
 
@@ -996,13 +1091,13 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                     'product_size': selectedSize // New size to update
                 },
                 url: "{{ route('cart.update') }}", // Use the same route for updating size
-                success: function(data) {
+                success: function (data) {
                     if (data) {
                         $(".cartlist").html(data); // Update the cart list UI with new data
                         return cart_count(); // Update the cart count
                     }
                 },
-                error: function() {
+                error: function () {
                     alert('An error occurred while updating the size. Please try again.');
                 }
             });
@@ -1011,7 +1106,7 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
 
 
     // Event listener for color selector change
-    $('.cart-color-selector').on('change', function() {
+    $('.cart-color-selector').on('change', function () {
         var rowId = $(this).data('id'); // Get the row ID
         var selectedColor = $(this).val(); // Get the selected color
 
@@ -1023,13 +1118,13 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                     'product_color': selectedColor // New size to update
                 },
                 url: "{{ route('cart.update') }}", // Use the same route for updating size
-                success: function(data) {
+                success: function (data) {
                     if (data) {
                         $(".cartlist").html(data); // Update the cart list UI with new data
                         return cart_count(); // Update the cart count
                     }
                 },
-                error: function() {
+                error: function () {
                     alert('An error occurred while updating the size. Please try again.');
                 }
             });
@@ -1058,7 +1153,7 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
     console.log('[GTM] page_view event fired');
 
     // Check if Facebook Pixel is loaded
-    setTimeout(function() {
+    setTimeout(function () {
         if (typeof fbq !== 'undefined') {
             console.log('[Facebook Pixel] Status: LOADED ✓');
             console.log('[Facebook Pixel] fbq function available:', typeof fbq);
@@ -1075,7 +1170,7 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
     }, 500);
 
     // Helper function to check pixel status (can be called from console)
-    window.checkPixelStatus = function() {
+    window.checkPixelStatus = function () {
         console.log('[Facebook Pixel] ========== PIXEL STATUS CHECK ==========');
         if (typeof fbq !== 'undefined') {
             console.log('✓ fbq is defined');
@@ -1083,7 +1178,7 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
             try {
                 fbq('track', 'PageView');
                 console.log('✓ Test PageView event fired successfully');
-            } catch(e) {
+            } catch (e) {
                 console.error('✗ Error firing test event:', e);
             }
         } else {
@@ -1103,9 +1198,9 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
     @endphp
     // View Cart Event - Fire when cart section is visible
     @if($cartAvailable && Cart::instance('shopping')->count() > 0)
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Clear previous ecommerce object
-        dataLayer.push({ ecommerce: null });
+        dataLayer.push({ecommerce: null});
 
         // Calculate cart total
         var cartTotal = 0;
@@ -1185,7 +1280,7 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
         $cartAvailable = class_exists(\Gloudemans\Shoppingcart\Facades\Cart::class);
     @endphp
     @if($cartAvailable && Cart::instance('shopping')->count() > 0)
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Check if order form is in viewport
         function isElementInViewport(el) {
             var rect = el.getBoundingClientRect();
@@ -1206,7 +1301,7 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                 checkoutFired = true;
 
                 // Clear previous ecommerce object
-                dataLayer.push({ ecommerce: null });
+                dataLayer.push({ecommerce: null});
 
                 // Calculate checkout total
                 var checkoutTotal = 0;
@@ -1289,87 +1384,45 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
 
 <script>
     // Update the cart and highlight the selected card
-    function updateCart(productId) {
-        // Remove 'selected' class from all product cards
-        const productCards = document.querySelectorAll('.product-card');
-        productCards.forEach(card => card.classList.remove('selected'));
+    function recalculateCart() {
+        let qty = parseInt($("#cart_qty").val());
+        let price = parseFloat($("#cart_qty").data("price"));
+        let shipping = parseFloat($("#shipping_cost").text());
 
-        // Add 'selected' class to the currently selected card
-        const selectedCard = document.getElementById(`product_${productId}`).nextElementSibling; // Get the label associated with the radio input
-        selectedCard.classList.add('selected');
+        let netTotal = price * qty;
+        let grandTotal = netTotal + shipping;
 
-        $("#loading").show();
-        if (productId) {
-            $.ajax({
-                type: "GET",
-                data: { id: productId },
-                url: "{{route('cart.changeProduct')}}",
-                success: function (data) {
-                    if (data) {
-                        $(".cartlist").html(data);
-                        $("#loading").hide();
+        $("#net_total").text(netTotal.toFixed(2));
+        $("#grand_total").text(grandTotal.toFixed(2));
+    }
 
-                        // Fire AddToCart event after product is added
-                        @if(isset($pixels) && count($pixels) > 0)
-                        if (typeof fbq !== 'undefined') {
-                            // Get product info from the selected product
-                            var selectedProduct = null;
-                            @foreach($products as $product)
-                            if ('{{ $product->id }}' == productId) {
-                                selectedProduct = {
-                                    id: '{{ $product->id }}',
-                                    name: '{{ addslashes($product->name) }}',
-                                    price: {{ $product->new_price }}
-                                };
-                            }
-                            @endforeach
+    // Product change
+    function updateCart(el) {
+        let price = $(el).data("price");
+        let name = $(el).data("name");
+        let slug = $(el).data("slug");
+        let image = $(el).data("image");
 
-                            if (selectedProduct) {
-                                console.log('[Facebook Pixel] Tracking AddToCart event');
-                                console.log('[Facebook Pixel] AddToCart data:', selectedProduct);
+        // Reset qty
+        $("#cart_qty").val(1).data("price", price);
 
-                                // GTM: Add to Cart Event
-                                dataLayer.push({
-                                    event: "add_to_cart",
-                                    ecommerce: {
-                                        currency: "BDT",
-                                        value: selectedProduct.price,
-                                        items: [{
-                                            item_name: selectedProduct.name,
-                                            item_id: selectedProduct.id,
-                                            price: selectedProduct.price,
-                                            currency: "BDT",
-                                            quantity: 1
-                                        }]
-                                    }
-                                });
+        // Update product info
+        $("#cart_product_name").text(name.substring(0, 20));
+        $("#cart_product_img").attr("src", image);
+        $("#cart_product_link").attr("href", "/product/" + slug);
 
-                                // Facebook Pixel: AddToCart Event
-                                fbq('track', 'AddToCart', {
-                                    content_name: selectedProduct.name,
-                                    content_ids: [selectedProduct.id],
-                                    content_type: 'product',
-                                    value: selectedProduct.price,
-                                    currency: 'BDT'
-                                });
-                                console.log('[Facebook Pixel] AddToCart event fired');
-                            } else {
-                                console.warn('[Facebook Pixel] Selected product not found for AddToCart event');
-                            }
-                        } else {
-                            console.error('[Facebook Pixel] ERROR: fbq is not defined. Cannot fire AddToCart event.');
-                        }
-                        @else
-                        console.warn('[Facebook Pixel] No pixels configured. AddToCart event skipped.');
-                        @endif
-                    }
-                },
-            });
-        }
+        // Update price
+        $("#unit_price").text(price);
+
+        recalculateCart();
+
+        // UI highlight
+        $(".product-card").removeClass("selected");
+        $(el).next("label").addClass("selected");
     }
 
     // Automatically highlight the first card on page load
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const firstCard = document.querySelector('.product-card');
         if (firstCard) {
             firstCard.classList.add('selected');
@@ -1383,7 +1436,8 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
             $gtmId = str_replace('GTM-', '', $gtm->code);
         @endphp
         <noscript>
-            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-{{ $gtmId }}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-{{ $gtmId }}" height="0" width="0"
+                    style="display:none;visibility:hidden"></iframe>
         </noscript>
     @endforeach
     <!-- End Google Tag Manager (noscript) -->

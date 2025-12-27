@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Models\Backend\Campaign;
+use App\Models\Backend\CampaignProduct;
 use App\Models\PopUp;
 use App\Models\ShippingCharge;
 use Illuminate\Http\Request;
@@ -864,15 +865,20 @@ class FrontController extends Controller
 
     public function campaign($slug)
     {
-        $campaign_data = Campaign::where('slug', $slug)->with('images')->first();
+        $campaign_data = Campaign::where('slug', $slug)->with(['images','products.productstock.color','products.productstock.size'])->first();
 
-        $products = \App\Models\Backend\Product::whereIn('id', function($query) use ($campaign_data) {
-            $query->select('product_id')
-                ->from('campaign_products')
-                ->where('campaign_id', $campaign_data->id);
-        })->orWhere('id', $campaign_data->product_id)
-            ->with('image')
-            ->get();
+//        $campaingProducts = CampaignProduct::query()->where('campaign_id', $campaign_data->id)->get();
+
+//        $products = \App\Modules\Backend\ProductManagement\Entities\Product::whereIn('id', function($query) use ($campaign_data) {
+//            $query->select('product_id')
+//                ->from('campaign_products')
+//                ->where('campaign_id', $campaign_data->id);
+//        })->orWhere('id', $campaign_data->product_id)
+//            ->with(['image','productstock'])
+//            ->get();
+//        dd($products);
+
+        $products = $campaign_data->products ?? [];
 
 
 //        Cart::instance('shopping')->destroy();
