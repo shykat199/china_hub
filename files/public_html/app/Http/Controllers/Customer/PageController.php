@@ -61,7 +61,7 @@ class PageController extends Controller
             ->where('user_id', auth('customer')->id())
             ->latest()
             ->first();
-            $shipping_areas = ShippingArea::where('status', 1)->orderBy('id', 'asc')->get();
+        $shipping_areas = ShippingArea::where('status', 1)->orderBy('id', 'asc')->get();
 
         return view('customer.checkout.checkout_guest',compact('carts', 'billing', 'shipping','shipping_areas', 'products'));
     }
@@ -95,8 +95,8 @@ class PageController extends Controller
         $products =  \Illuminate\Support\Facades\DB::table('products')
         ->where('name', 'like', '%' . $keyword . '%')
         ->get();
-        
+
         return response()->json($products);
     }
-    
+
 }

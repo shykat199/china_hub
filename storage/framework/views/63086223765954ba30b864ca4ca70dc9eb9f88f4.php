@@ -797,6 +797,9 @@ endif;
 unset($__errorArgs, $__bag); ?>
                                                         </div>
                                                     </div>
+                                                    <?php
+                                                        $shipping_areas = \App\Models\ShippingArea::where('status', 1)->orderBy('id', 'asc')->get();
+                                                    ?>
                                                     <div class="col-sm-12">
                                                         <div class="form-group mb-3">
                                                             <label for="area">আপনার এরিয়া সিলেক্ট করুন  *</label>
@@ -808,9 +811,9 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" name="area"   required>
-                                                                <?php if(!empty($shippingcharge)): ?>
-                                                                    <?php $__currentLoopData = $shippingcharge; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                                        <option value="<?php echo e($value->id); ?>"><?php echo e($value->name); ?></option>
+                                                                <?php if(!empty($shipping_areas)): ?>
+                                                                    <?php $__currentLoopData = $shipping_areas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$shipping_area): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                        <option value="<?php echo e($shipping_area->charge); ?>"><?php echo e($shipping_area->name); ?> - <?php echo e($shipping_area->charge); ?></option>
                                                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                                 <?php endif; ?>
                                                             </select>

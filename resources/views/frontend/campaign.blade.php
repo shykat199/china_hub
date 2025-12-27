@@ -748,13 +748,16 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                                                             @enderror
                                                         </div>
                                                     </div>
+                                                    @php
+                                                        $shipping_areas = \App\Models\ShippingArea::where('status', 1)->orderBy('id', 'asc')->get();
+                                                    @endphp
                                                     <div class="col-sm-12">
                                                         <div class="form-group mb-3">
                                                             <label for="area">আপনার এরিয়া সিলেক্ট করুন  *</label>
                                                             <select type="area" id="area" class="form-control @error('area') is-invalid @enderror" name="area"   required>
-                                                                @if(!empty($shippingcharge))
-                                                                    @foreach($shippingcharge as $key=>$value)
-                                                                        <option value="{{$value->id}}">{{$value->name}}</option>
+                                                                @if(!empty($shipping_areas))
+                                                                    @foreach($shipping_areas as $key=>$shipping_area)
+                                                                        <option value="{{$shipping_area->charge}}">{{ $shipping_area->name }} - {{ $shipping_area->charge }}</option>
                                                                     @endforeach
                                                                 @endif
                                                             </select>
