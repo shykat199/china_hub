@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Http\Controllers\Api\ShippingAddressController;
+use App\Http\Controllers\Frontend\UserBillingInfoController;
+use App\Mail\OrderPending;
 use App\Models\Contact;
 use App\Models\Customer;
 use App\Models\GeneralSetting;
@@ -12,6 +15,7 @@ use App\Models\Shipping;
 use App\Models\ShippingCharge;
 use App\Models\SmsGateway;
 use Brian2694\Toastr\Facades\Toastr;
+use CartItem;
 use Illuminate\Http\Request;
 use App\Helpers\NotifyHelper;
 use App\Models\Frontend\Page;
@@ -24,9 +28,11 @@ use App\Models\Seller\Category;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use App\Models\Frontend\OrderDetail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Frontend\OrderTimeline;
 use App\Models\Frontend\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use shurjopayv2\ShurjopayLaravelPackage8\Http\Controllers\ShurjopayController;
 use WpOrg\Requests\Auth;
@@ -228,145 +234,188 @@ class OrderController extends Controller
     }
 
     public function order_save(Request $request){
-        dd($request->all());
-//        $this->validate($request,[
-//            'name'=>'required',
-//            'phone'=>'required',
-//            'address'=>'required',
-//            'area'=>'required',
-//        ]);
-//        if(Cart::instance('shopping')->count() <= 0) {
-//            Toastr::error('Your shopping empty', 'Failed!');
-//            return redirect()->back();
-//        }
+        $this->validate($request, [
+            'name' => 'required|max:100',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|string|max:250',
+        ]);
 
-//        $subtotal = Cart::instance('shopping')->subtotal();
-//        $subtotal = str_replace(',','',$subtotal);
-//        $subtotal = str_replace('.00', '',$subtotal);
-//        $discount = Session::get('discount');
-//
-//        $shippingfee  = Session::get('shipping');
-//        $shipping_area  = ShippingCharge::where('id', $request->area)->first();
-//        if(\Illuminate\Support\Facades\Auth::guard('customer')->user()){
-//            $customer_id = \Illuminate\Support\Facades\Auth::guard('customer')->user()->id;
-//        }else{
-//            $exits_customer = Customer::where('phone',$request->phone)->select('phone','id')->first();
-//            if($exits_customer){
-//                $customer_id = $exits_customer->id;
-//            }else{
-//                $password = rand(111111,999999);
-//                $store              = new Customer();
-//                $store->name        = $request->name;
-//                $store->slug        = $request->name;
-//                $store->phone       = $request->phone;
-//                $store->password    = bcrypt($password);
-//                $store->verify      = 1;
-//                $store->status      = 'active';
-//                $store->save();
-//                $customer_id = $store->id;
-//            }
-//
-//        }
+        // Create or update user
+        $user = User::updateOrCreate(
+            ['mobile' => $request->phone],
+            [
+                'first_name' => $request->name,
+                'address' => $request->address,
+                'username' => $request->phone,
+            ]
+        );
 
-        // order data save
-//        $order                   = new \App\Models\Order();
-//        $order->invoice_id       = rand(11111,99999);
-//        $order->amount           = ($subtotal + $shippingfee) - $discount;
-//        $order->discount         = $discount ? $discount : 0;
-//        $order->shipping_charge  = $shippingfee;
-//        $order->customer_id      =  $customer_id;
-//        $order->order_status     = 1;
-//        $order->note             = $request->note;
-//        $order->save();
-//
-//        // shipping data save
-//        $shipping              =   new Shipping();
-//        $shipping->order_id    =   $order->id;
-//        $shipping->customer_id =   $customer_id;
-//        $shipping->name        =   $request->name;
-//        $shipping->phone       =   $request->phone;
-//        $shipping->address     =   $request->address;
-//        $shipping->area        =   $shipping_area->name;
-//        $shipping->save();
-//
-//        // payment data save
-//        $payment                 = new Payment();
-//        $payment->order_id       = $order->id;
-//        $payment->customer_id    = $customer_id;
-//        $payment->payment_method = $request->payment_method;
-//        $payment->amount         = $order->amount;
-//        $payment->payment_status = 'pending';
-//        $payment->save();
+        $user_id = $user->id;
+        $request['user_id'] = $user_id;
 
-        // order details data save
-//        foreach(Cart::instance('shopping')->content() as $cart){
-//            $order_details                  =   new OrderDetails();
-//            $order_details->order_id        =   $order->id;
-//            $order_details->product_id      =   $cart->id;
-//            $order_details->product_name    =   $cart->name;
-//            $order_details->purchase_price  =   $cart->options->purchase_price;
-//            $order_details->product_color   =   $cart->options->product_color;
-//            $order_details->product_size    =   $cart->options->product_size;
-//            $order_details->sale_price      =   $cart->price;
-//            $order_details->qty             =   $cart->qty;
-//            $order_details->save();
-//        }
+        // Store shipping & billing info
+        app(ShippingAddressController::class)->store($request);
+        app(UserBillingInfoController::class)->store($request);
 
-//        Cart::instance('shopping')->destroy();
-//
-//        Toastr::success('Thanks, Your order place successfully', 'Success!');
-//        $site_setting = GeneralSetting::where('status', 1)->first();
-//        $sms_gateway = SmsGateway::where(['status'=> 1, 'order'=>'1'])->first();
-//
-//        $contact = Contact::where('status',1)->first();
+        // Payment method
+        $request['payment_by'] = 'COD';
 
+        // Store order
+        $this->orderStore($request);
 
-//        if($sms_gateway) {
-//            $url = "$sms_gateway->url";
-//            $data = [
-//                "api_key" => "$sms_gateway->api_key",
-//                "number" => $request->phone,
-//                "type" => 'text',
-//                "senderid" => "$sms_gateway->serderid",
-//                "message" => "Dear $request->name!\r\nYour order#".$order->invoice_id." has been successfully placed. Thank you for using $site_setting->name"
-//            ];
-//            $ch = curl_init();
-//            curl_setopt($ch, CURLOPT_URL, $url);
-//            curl_setopt($ch, CURLOPT_POST, 1);
-//            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-//            $response = curl_exec($ch);
-//            curl_close($ch);
-//        }
+        /* ===========================
+           CLEAR SESSION CART DATA
+        =========================== */
+        session()->forget([
+            'cart',
+            'total',
+            'subTotal',
+            'coupon_id',
+            'coupon_infos',
+            'totalShipping',
+            'coupon_discount',
+        ]);
 
+        // Save user info in session
+        session()->put('user_id', $user_id);
+        session()->put('customer_mobile', $request->mobile);
 
+        return response()->json([
+            'message' => __('Order place successfully.'),
+            'redirect' => route('customer.order-success')
+        ]);
 
-//        if($request->payment_method=='bkash'){
-//            return redirect('/bkash/checkout-url/create?order_id='.$order->id);
-//        }elseif($request->payment_method=='shurjopay'){
-//            $info = array(
-//                'currency' => "BDT",
-//                'amount' => $order->amount,
-//                'order_id' => uniqid(),
-//                'discsount_amount' =>0 ,
-//                'disc_percent' =>0 ,
-//                'client_ip' => $request->ip(),
-//                'customer_name' =>  $request->name,
-//                'customer_phone' => $request->phone,
-//                'email' => "customer@gmail.com",
-//                'customer_address' => $request->address,
-//                'customer_city' => $request->area,
-//                'customer_state' => $request->area,
-//                'customer_postcode' => "1212",
-//                'customer_country' => "BD",
-//                'value1' => $order->id
-//            );
-//            $shurjopay_service = new ShurjopayController();
-//            return $shurjopay_service->checkout($info);
-//        }else{
-//            return redirect('customer/order-success/'.$order->id);
-//        }
+    }
 
+    public function orderStore(Request $request)
+    {
+        return DB::transaction(function () use ($request) {
+            // 🔁 Get cart from SESSION
+            $cart = json_decode(json_encode(session()->get('cart', [])));
+
+            $name = $request->first_name;
+
+            // Generate order number
+            $order_no = \App\Modules\Backend\OrderManagement\Entities\Order::latest()->first()->order_no ?? 1000;
+            $order_no = substr($order_no, 3);
+            $order_no = 'INV' . ($order_no + 1);
+
+            // Totals from SESSION
+            $subTotal = $request->subtotal ;
+            $total_discount = session('total_discount', 0) + session('coupon_discount', 0);
+            $total_vat = session('total_vat', 0);
+            $totalShipping = $request->shipping_cost;
+
+            if ($totalShipping) {
+                $subTotal += $totalShipping;
+            }
+
+            if ($total_discount) {
+                $subTotal -= $totalShipping;
+            }
+
+            // Email (optional)
+            if ($request->get('email') != null) {
+                try {
+                    Mail::to(auth('customer')->user()->email)->send(
+                        new OrderPending([
+                            'request' => $request,
+                            'name' => $name,
+                            'order_no' => $order_no,
+                            'subTotal' => $subTotal,
+                            'cart' => $cart
+                        ])
+                    );
+                } catch (\Swift_TransportException $e) {
+                    Session::flash('error', $e->getMessage());
+                }
+            }
+
+            /* ===========================
+               CREATE ORDER
+            =========================== */
+            $data = [
+                'order_no' => $order_no,
+                'discount' => $total_discount,
+                'vat' => $total_vat,
+                'coupon_discount' => session('coupon_discount'),
+                'shipping_cost' => $totalShipping,
+                'total_price' => $subTotal,
+                'coupon_id' => session('coupon_id'),
+                'shipping_name' => $name,
+                'shipping_address_1' => $request->address,
+                'shipping_address_2' => $request->address,
+                'shipping_mobile' => $request->phone,
+                'payment_by' => $request->payment_by ?? 'COD',
+                'user_id' => $request->user_id ?? 0,
+                'user_first_name' => $name,
+                'paid_amount' => 0,
+                'user_address_1' => $request->address,
+                'user_mobile' => $request->phone,
+            ];
+
+            dd($data,'check');
+
+            $order = \App\Modules\Backend\OrderManagement\Entities\Order::create($data + [
+                    'payment_status' => $request->payment_by === 'COD' ? 'unpaid' : 'paid',
+                    'paid_amount' => $request->payment_by === 'COD' ? 0 : $request->paid_amount,
+                    'meta' => [
+                        'bank' => $request->bank,
+                        'transaction_id' => $request->transaction_id,
+                    ]
+                ]);
+
+            /* ===========================
+               ORDER ITEMS
+            =========================== */
+            $product = \App\Modules\Backend\ProductManagement\Entities\Product::findOrFail($request->pId);
+
+            if ($product->is_manage_stock && $product->quantity < $request->quantity) {
+                return 0;
+            }
+
+            $details = OrderDetail::create([
+                'seller_id' => $product->seller_id ?? null,
+                'user_id' => $request->user_id ?? 0,
+                'order_id' => $order->id,
+                'order_stat' => 1,
+                'product_id' => $item->id,
+                'sale_price' => CartItem::price($item->id),
+                'qty' => $item->quantity,
+                'color' => $item->color ?? null,
+                'size' => $item->size ?? null,
+                'discount' => $product->discount,
+                'coupon_discount' => $coupon_discount,
+                'shipping_cost' => CartItem::shipping($item->id),
+                'total_shipping_cost' => CartItem::shipping($item->id, $item->quantity),
+                'total_price' => CartItem::price($item->id, $item->quantity),
+                'grand_total' => CartItem::price($item->id, $item->quantity)
+                    + CartItem::shipping($item->id, $item->quantity),
+                'inside_shipping_days' => CartItem::estimatedShippingDays($item->id),
+            ]);
+
+            // Order timeline
+            OrderTimeline::create([
+                'order_detail_id' => $details->id,
+                'order_stat' => 2,
+                'order_stat_desc' => $request->get('order_stat_desc'),
+                'order_stat_datetime' => now(),
+                'user_id' => $request->user_id ?? 0,
+                'remarks' => '',
+                'product_id' => $item->id,
+            ]);
+
+            // Stock management
+            if (isset($item->size_id) || isset($item->color_id)) {
+                Productstock::where('product_id', $item->id)
+                    ->where('size_id', $item->size_id)
+                    ->where('color_id', $item->color_id)
+                    ->decrement('quantities', $item->quantity);
+            }
+
+            $product->decrement('quantity', $item->quantity);
+
+            return $order;
+        });
     }
 }

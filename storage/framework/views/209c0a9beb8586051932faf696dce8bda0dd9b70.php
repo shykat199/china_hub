@@ -74,7 +74,7 @@
                                         <!-- Billing Address -->
                                         <div class="col-12">
                                             <label for="billing_address" class="form-label">
-                                                <?php echo e(__('ঠিকানাssss')); ?> <span class="text-danger">*</span>
+                                                <?php echo e(__('ঠিকানা')); ?> <span class="text-danger">*</span>
                                             </label>
                                             <input
                                                 type="text"

@@ -630,6 +630,7 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                                                                        {{ $loop->first ? 'checked' : '' }}
                                                                        style="display:none"
 
+                                                                       data-pId="{{ $product->id }}"
                                                                        data-name="{{ $product->name }}"
                                                                        data-slug="{{ $product->slug }}"
                                                                        data-price="{{ $product->sale_price }}"
@@ -789,9 +790,13 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                             </div>
                             <div class="col-lg-5 cus-order-2">
                                 <div class="checkout-shipping" id="order_form">
-                                    <form action="{{route('customer.ordersave')}}" method="POST"
-                                          data-parsley-validate="">
+                                    <form action="{{route('customer.ordersave')}}" method="POST" data-parsley-validate="">
                                         @csrf
+                                        <input type="hidden" id="productId" name="pId" value="{{$firstProduct->id}}">
+                                        <input type="hidden" id="productQuantity" name="quantity" value="1">
+                                        <input type="hidden" id="cartSubTotal" name="subtotal" value="{{$firstProduct->sale_price ?? 0}}">
+                                        <input type="hidden" id="deliveryCharge" name="shipping_cost" value="{{$getFirstCharge}}">
+                                        <input type="hidden" id="totalAmount" name="totalAmount" value="{{ ($firstProduct->sale_price ?? 0) + ($getFirstCharge ?? 0) }}">
                                         <div class="card">
                                             <div class="card-header">
                                                 <h5 class="potro_font">আপনার ইনফরমেশন দিন </h5>
@@ -816,7 +821,7 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                                                     <div class="col-sm-12">
                                                         <div class="form-group mb-3">
                                                             <label for="phone">আপনার মোবাইল লিখুন *</label>
-                                                            <input type="number" minlength="11" id="number"
+                                                            <input type="number" minlength="11"
                                                                    maxlength="11" pattern="0[0-9]+"
                                                                    title="please enter number only and 0 must first character"
                                                                    title="Please enter an 11-digit number." id="phone"
@@ -834,11 +839,11 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                                                     <div class="col-sm-12">
                                                         <div class="form-group mb-3">
                                                             <label for="address">আপনার ঠিকানা লিখুন *</label>
-                                                            <input type="address" id="address"
+                                                            <input type="text" id="address"
                                                                    class="form-control @error('address') is-invalid @enderror"
                                                                    placeholder="জেলা, থানা, গ্রাম " name="address"
                                                                    value="{{old('address')}}" required>
-                                                            @error('email')
+                                                            @error('address')
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
                                                             </span>
@@ -886,8 +891,6 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
                                     </p>
                                 @endif
                             </div>
-                            <!-- col end -->
-
                             <!-- col end -->
                         </div>
                     </div>
@@ -940,24 +943,24 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
     });
 </script>
 <script>
-    $(".cart_remove").on("click", function () {
-        var id = $(this).data("id");
-        $("#loading").show();
-        if (id) {
-            $.ajax({
-                type: "GET",
-                data: {id: id},
-                url: "{{route('cart.remove')}}",
-                success: function (data) {
-                    if (data) {
-                        $(".cartlist").html(data);
-                        $("#loading").hide();
-                        return cart_count() + mobile_cart() + cart_summary();
-                    }
-                },
-            });
-        }
-    });
+    {{--$(".cart_remove").on("click", function () {--}}
+    {{--    var id = $(this).data("id");--}}
+    {{--    $("#loading").show();--}}
+    {{--    if (id) {--}}
+    {{--        $.ajax({--}}
+    {{--            type: "GET",--}}
+    {{--            data: {id: id},--}}
+    {{--            url: "{{route('cart.remove')}}",--}}
+    {{--            success: function (data) {--}}
+    {{--                if (data) {--}}
+    {{--                    $(".cartlist").html(data);--}}
+    {{--                    $("#loading").hide();--}}
+    {{--                    return cart_count() + mobile_cart() + cart_summary();--}}
+    {{--                }--}}
+    {{--            },--}}
+    {{--        });--}}
+    {{--    }--}}
+    {{--});--}}
 
     function updateTotals(qty) {
         let price = parseFloat($("#cart_qty").data("price"));
@@ -968,6 +971,10 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
 
         $("#net_total").text(netTotal.toFixed(2));
         $("#grand_total").text(grandTotal.toFixed(2));
+
+        $("#cartSubTotal").val(netTotal.toFixed(2));
+        $("#totalAmount").val(grandTotal.toFixed(2));
+        $("#productQuantity").val(qty);
     }
 
     $(".cart_increment").on("click", function () {
@@ -1394,6 +1401,10 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
 
         $("#net_total").text(netTotal.toFixed(2));
         $("#grand_total").text(grandTotal.toFixed(2));
+
+        $("#cartSubTotal").val(netTotal.toFixed(2));
+        $("#deliveryCharge").val(shipping.toFixed(2));
+        $("#totalAmount").val(grandTotal.toFixed(2));
     }
 
     // Product change
@@ -1402,6 +1413,7 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
         let name = $(el).data("name");
         let slug = $(el).data("slug");
         let image = $(el).data("image");
+        let productId = $(el).val();
 
         // Reset qty
         $("#cart_qty").val(1).data("price", price);
@@ -1411,19 +1423,21 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
         $("#cart_product_img").attr("src", image);
         $("#cart_product_link").attr("href", "/product/" + slug);
 
+        $("#productId").val(productId);
+
         // Update price
         $("#unit_price").text(price);
 
         recalculateCart();
 
         // UI highlight
-        $(".product-card").removeClass("selected");
+        $(".card.product-card").removeClass("selected");
         $(el).next("label").addClass("selected");
     }
 
     // Automatically highlight the first card on page load
     document.addEventListener('DOMContentLoaded', function () {
-        const firstCard = document.querySelector('.product-card');
+        const firstCard = document.querySelector('.card.product-card');
         if (firstCard) {
             firstCard.classList.add('selected');
         }
