@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Http\Controllers\Api\ShippingAddressController;
+use App\Http\Controllers\Frontend\ShippingAddressController;
 use App\Http\Controllers\Frontend\UserBillingInfoController;
+use App\Http\Traits\ResponseMessage;
 use App\Mail\OrderPending;
-use App\Models\Contact;
-use App\Models\Customer;
-use App\Models\GeneralSetting;
-use App\Models\OrderDetails;
-use App\Models\Payment;
 use App\Models\Productstock;
 use App\Models\Shipping;
 use App\Models\ShippingCharge;
 use App\Models\SmsGateway;
+use App\Modules\Backend\ProductManagement\Entities\ProductDetail;
 use Brian2694\Toastr\Facades\Toastr;
 use CartItem;
 use Illuminate\Http\Request;
@@ -22,7 +19,6 @@ use App\Models\Frontend\Page;
 use App\Models\Frontend\Size;
 use App\Models\Frontend\Color;
 use App\Models\Frontend\Order;
-use App\Models\Seller\Product;
 use App\Models\Frontend\Seller;
 use App\Models\Seller\Category;
 use Illuminate\Contracts\View\View;
@@ -40,6 +36,7 @@ use WpOrg\Requests\Auth;
 class OrderController extends Controller
 {
     use NotifyHelper;
+    use ResponseMessage;
 
     public function __construct()
     {
@@ -254,8 +251,8 @@ class OrderController extends Controller
         $request['user_id'] = $user_id;
 
         // Store shipping & billing info
-        app(ShippingAddressController::class)->store($request);
-        app(UserBillingInfoController::class)->store($request);
+//        app(ShippingAddressController::class)->store($request);
+//        app(UserBillingInfoController::class)->store($request);
 
         // Payment method
         $request['payment_by'] = 'COD';
@@ -280,10 +277,7 @@ class OrderController extends Controller
         session()->put('user_id', $user_id);
         session()->put('customer_mobile', $request->mobile);
 
-        return response()->json([
-            'message' => __('Order place successfully.'),
-            'redirect' => route('customer.order-success')
-        ]);
+        return redirect()->back()->with($this->product_order_place_message);
 
     }
 
@@ -293,7 +287,7 @@ class OrderController extends Controller
             // 🔁 Get cart from SESSION
             $cart = json_decode(json_encode(session()->get('cart', [])));
 
-            $name = $request->first_name;
+            $name = $request->name;
 
             // Generate order number
             $order_no = \App\Modules\Backend\OrderManagement\Entities\Order::latest()->first()->order_no ?? 1000;
@@ -326,7 +320,8 @@ class OrderController extends Controller
                             'cart' => $cart
                         ])
                     );
-                } catch (\Swift_TransportException $e) {
+                }
+                catch (\Swift_TransportException $e) {
                     Session::flash('error', $e->getMessage());
                 }
             }
@@ -354,45 +349,47 @@ class OrderController extends Controller
                 'user_mobile' => $request->phone,
             ];
 
-            dd($data,'check');
-
-            $order = \App\Modules\Backend\OrderManagement\Entities\Order::create($data + [
+            $orderData = $data + [
                     'payment_status' => $request->payment_by === 'COD' ? 'unpaid' : 'paid',
                     'paid_amount' => $request->payment_by === 'COD' ? 0 : $request->paid_amount,
                     'meta' => [
                         'bank' => $request->bank,
                         'transaction_id' => $request->transaction_id,
                     ]
-                ]);
+                ];
+
+            $order = \App\Modules\Backend\OrderManagement\Entities\Order::create($orderData);
 
             /* ===========================
                ORDER ITEMS
             =========================== */
-            $product = \App\Modules\Backend\ProductManagement\Entities\Product::findOrFail($request->pId);
+            $product = DB::table('products')->where('id', $request->pId)->first();
+            $productDetails = DB::table('product_details')->where('product_id', $request->pId)->first();
 
             if ($product->is_manage_stock && $product->quantity < $request->quantity) {
-                return 0;
+                return redirect()->back()->with($this->product_insufficient_message);
             }
 
-            $details = OrderDetail::create([
+            $orderDetails = [
                 'seller_id' => $product->seller_id ?? null,
                 'user_id' => $request->user_id ?? 0,
                 'order_id' => $order->id,
                 'order_stat' => 1,
-                'product_id' => $item->id,
-                'sale_price' => CartItem::price($item->id),
-                'qty' => $item->quantity,
-                'color' => $item->color ?? null,
-                'size' => $item->size ?? null,
+                'product_id' => $product->id,
+                'sale_price' => $product->sale_price,
+                'qty' => $request->quantity,
+                'color' => $request->color ?? null,
+                'size' => $request->size ?? null,
                 'discount' => $product->discount,
-                'coupon_discount' => $coupon_discount,
-                'shipping_cost' => CartItem::shipping($item->id),
-                'total_shipping_cost' => CartItem::shipping($item->id, $item->quantity),
-                'total_price' => CartItem::price($item->id, $item->quantity),
-                'grand_total' => CartItem::price($item->id, $item->quantity)
-                    + CartItem::shipping($item->id, $item->quantity),
-                'inside_shipping_days' => CartItem::estimatedShippingDays($item->id),
-            ]);
+                'coupon_discount' => 0,
+                'shipping_cost' => $request->shipping_cost,
+                'total_shipping_cost' =>!empty($productDetails) && $productDetails->is_free_shipping == 0 ? ($product->shipping_cost * $request->quantity)  : 0,
+                'total_price' => $request->subtotal,
+                'grand_total' => $request->totalAmount,
+                'inside_shipping_days' => $productDetails->inside_shipping_days ?? '3 to 7 days',
+            ];
+
+            $details = OrderDetail::create($orderDetails);
 
             // Order timeline
             OrderTimeline::create([
@@ -402,18 +399,21 @@ class OrderController extends Controller
                 'order_stat_datetime' => now(),
                 'user_id' => $request->user_id ?? 0,
                 'remarks' => '',
-                'product_id' => $item->id,
+                'product_id' => $product->id,
             ]);
 
             // Stock management
             if (isset($item->size_id) || isset($item->color_id)) {
-                Productstock::where('product_id', $item->id)
+                DB::table('productstocks')->where('product_id', $item->id)
                     ->where('size_id', $item->size_id)
                     ->where('color_id', $item->color_id)
                     ->decrement('quantities', $item->quantity);
             }
 
-            $product->decrement('quantity', $item->quantity);
+
+            DB::table('products')->where('id', $request->pId)->update(
+                ['quantity' => $product->quantity - (int)$request->quantity]);
+
 
             return $order;
         });

@@ -62,4 +62,10 @@ Trait ResponseMessage
             'alert-type' => 'error'
         ];
 
+    public $product_order_place_message =
+        [
+            'message' => 'Order has been saved.',
+            'alert-type' => 'success'
+        ];
+
 }

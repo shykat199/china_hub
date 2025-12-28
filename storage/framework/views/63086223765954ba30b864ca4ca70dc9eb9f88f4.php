@@ -972,6 +972,22 @@ unset($__errorArgs, $__bag); ?>
 <script src="<?php echo e(asset('frontend/campaign/js')); ?>/owl.carousel.min.js"></script>
 <script src="<?php echo e(asset('frontend/campaign/js')); ?>/select2.min.js"></script>
 <script src="<?php echo e(asset('frontend/campaign/js')); ?>/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if(session('message')): ?>
+    <script>
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: "<?php echo e(session('alert-type')); ?>",
+            title: "<?php echo e(session('message')); ?>",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
+    </script>
+<?php endif; ?>
+
 <!-- bootstrap js -->
 <script>
     $(document).ready(function () {

@@ -907,6 +907,22 @@ optional($campaign_data)->description && strlen($campaign_data->description) > 1
 <script src="{{ asset('frontend/campaign/js') }}/owl.carousel.min.js"></script>
 <script src="{{ asset('frontend/campaign/js') }}/select2.min.js"></script>
 <script src="{{ asset('frontend/campaign/js') }}/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('message'))
+    <script>
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: "{{ session('alert-type') }}",
+            title: "{{ session('message') }}",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
+    </script>
+@endif
+
 <!-- bootstrap js -->
 <script>
     $(document).ready(function () {
