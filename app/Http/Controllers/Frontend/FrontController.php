@@ -164,8 +164,7 @@ class FrontController extends Controller
             ->where('name', 'like', "%{$request->q}%")
             ->orderByRaw('CASE WHEN quantity = 0 THEN 1 ELSE 0 END') // stock grouping
             ->orderBy('created_at', 'DESC')
-            ->paginate(50)
-            ->withQueryString();
+            ->paginate(100);
 
         $categories = $this->categories();
 
@@ -309,7 +308,7 @@ class FrontController extends Controller
             ->where('is_active', 1)
             ->orderByRaw('CASE WHEN quantity = 0 THEN 1 ELSE 0 END')
             ->orderBy('created_at', 'DESC')
-            ->paginate(50);
+            ->paginate(100);
 
         $sizes = Size::query()->where('is_active', 1)->get();
 

@@ -301,7 +301,7 @@ class FrontController extends Controller
             ->whereIn('category_id', $cats)
             ->where('is_active', 1)
             ->orderByRaw('quantity = 0, quantity')
-            ->paginate(50);
+            ->paginate(100);
 
         $sizes = Size::query()->where('is_active', 1)->get();
 

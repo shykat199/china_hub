@@ -1,6 +1,63 @@
 @extends('frontend.layouts.front')
 
 @section('title', $title ?? 'Shop')
+@push('custom-css')
+    <style>
+        .custom-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            list-style: none;
+            padding: 0;
+            margin: 30px 0;
+        }
+
+        .custom-pagination .page-item {
+            display: flex;
+        }
+
+        .custom-pagination .page-link {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            color: #111;
+            background: #fff;
+            transition: all 0.2s ease;
+        }
+
+        .custom-pagination .page-item.active .page-link {
+            background: #c4161c;   /* RED ACTIVE */
+            border-color: #c4161c;
+            color: #fff;
+        }
+
+        .custom-pagination .page-item.disabled .page-link {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .custom-pagination .page-link:hover {
+            background: #f5f5f5;
+        }
+
+        @media (max-width: 576px) {
+            .custom-pagination .page-link {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+        }
+
+    </style>
+@endpush
 
 @section('content')
 
@@ -112,7 +169,41 @@
                                         <x-frontend.product-card :product="$product"></x-frontend.product-card>
                                     </div>
                                 @endforeach
-                                <x-frontend.page-navigation-ajax :paginator="$products"></x-frontend.page-navigation-ajax>
+{{--                                <x-frontend.page-navigation-ajax :paginator="$products"></x-frontend.page-navigation-ajax>--}}
+                                @if ($products->hasPages())
+                                    <ul class="custom-pagination">
+
+                                        {{-- Previous --}}
+                                        <li class="page-item {{ $products->onFirstPage() ? 'disabled' : '' }}">
+                                            <a href="{{ $products->previousPageUrl() ?? '#' }}"
+                                               data-page="{{ $products->currentPage() - 1 }}"
+                                               class="page-link">
+                                                &laquo;
+                                            </a>
+                                        </li>
+
+                                        {{-- Page Numbers --}}
+                                        @for ($page = 1; $page <= $products->lastPage(); $page++)
+                                            <li class="page-item {{ $page == $products->currentPage() ? 'active' : '' }}">
+                                                <a href="{{ $products->url($page) }}"
+                                                   data-page="{{ $page }}"
+                                                   class="page-link">
+                                                    {{ $page }}
+                                                </a>
+                                            </li>
+                                        @endfor
+
+                                        {{-- Next --}}
+                                        <li class="page-item {{ $products->hasMorePages() ? '' : 'disabled' }}">
+                                            <a href="{{ $products->nextPageUrl() ?? '#' }}"
+                                               data-page="{{ $products->currentPage() + 1 }}"
+                                               class="page-link">
+                                                &raquo;
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                @endif
                             </div>
                         </div>
 

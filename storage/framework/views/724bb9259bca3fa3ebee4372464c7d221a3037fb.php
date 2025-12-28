@@ -266,7 +266,8 @@
                     <div class="contact-infos my-3">
                         <?php $__currentLoopData = getContactsInfos(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="single-item">
-                                <h6 class="d-inline-block my-1 contact-number"><?php echo e($item->value['number'] ?? ''); ?></h6> <small class="d-inline-block ms-2" style="font-size: 13px; font-weight: 700"><?php echo e($item->value['title'] ?? ''); ?></small>
+                                <h6 class="d-inline-block my-1 contact-number"><?php echo e($item->value['number'] ?? ''); ?></h6>
+                                <small class="d-inline-block ms-2" style="font-size: 13px; font-weight: 700"><?php echo e($item->value['title'] ?? ''); ?></small>
                             </div>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>

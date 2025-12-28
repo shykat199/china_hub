@@ -1,4 +1,61 @@
 <?php $__env->startSection('title', $title ?? 'Shop'); ?>
+<?php $__env->startPush('custom-css'); ?>
+    <style>
+        .custom-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            list-style: none;
+            padding: 0;
+            margin: 30px 0;
+        }
+
+        .custom-pagination .page-item {
+            display: flex;
+        }
+
+        .custom-pagination .page-link {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            color: #111;
+            background: #fff;
+            transition: all 0.2s ease;
+        }
+
+        .custom-pagination .page-item.active .page-link {
+            background: #c4161c;   /* RED ACTIVE */
+            border-color: #c4161c;
+            color: #fff;
+        }
+
+        .custom-pagination .page-item.disabled .page-link {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .custom-pagination .page-link:hover {
+            background: #f5f5f5;
+        }
+
+        @media (max-width: 576px) {
+            .custom-pagination .page-link {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+        }
+
+    </style>
+<?php $__env->stopPush(); ?>
 
 <?php $__env->startSection('content'); ?>
 
@@ -122,17 +179,42 @@
 <?php endif; ?>
                                     </div>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'components.frontend.page-navigation-ajax','data' => ['paginator' => $products]]); ?>
-<?php $component->withName('frontend.page-navigation-ajax'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php $component->withAttributes(['paginator' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($products)]); ?> <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
-<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
-<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
-<?php endif; ?>
+
+                                <?php if($products->hasPages()): ?>
+                                    <ul class="custom-pagination">
+
+                                        
+                                        <li class="page-item <?php echo e($products->onFirstPage() ? 'disabled' : ''); ?>">
+                                            <a href="<?php echo e($products->previousPageUrl() ?? '#'); ?>"
+                                               data-page="<?php echo e($products->currentPage() - 1); ?>"
+                                               class="page-link">
+                                                &laquo;
+                                            </a>
+                                        </li>
+
+                                        
+                                        <?php for($page = 1; $page <= $products->lastPage(); $page++): ?>
+                                            <li class="page-item <?php echo e($page == $products->currentPage() ? 'active' : ''); ?>">
+                                                <a href="<?php echo e($products->url($page)); ?>"
+                                                   data-page="<?php echo e($page); ?>"
+                                                   class="page-link">
+                                                    <?php echo e($page); ?>
+
+                                                </a>
+                                            </li>
+                                        <?php endfor; ?>
+
+                                        
+                                        <li class="page-item <?php echo e($products->hasMorePages() ? '' : 'disabled'); ?>">
+                                            <a href="<?php echo e($products->nextPageUrl() ?? '#'); ?>"
+                                               data-page="<?php echo e($products->currentPage() + 1); ?>"
+                                               class="page-link">
+                                                &raquo;
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                <?php endif; ?>
                             </div>
                         </div>
 
