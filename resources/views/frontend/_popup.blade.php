@@ -54,3 +54,11 @@
     </div>
 </div>
 <!-- Popup Ads Modal end-->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+        myModal.show();
+    });
+</script>
+
