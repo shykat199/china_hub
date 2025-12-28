@@ -97,14 +97,14 @@
     </div>
     <div class="mybazar-total-info">
         <ul>
-            <li><?php echo e(__('Item(s) Subtotal')); ?>:<span><?php echo e($order->productPriceWithCurrency()); ?></span></li>
-            <li><?php echo e(__('Shipping Charge')); ?>:<span><?php echo e($order->costWithCurrency()); ?></span></li>
+            <li><?php echo e(__('Item(s) Subtotal')); ?>:<span><?php echo e(number_format($order->details->sum('total_price'),2)); ?> ৳</span></li>
+            <li><?php echo e(__('Shipping Charge')); ?>:<span><?php echo e(number_format($order->shipping_cost,2)); ?> ৳</span></li>
             <li>-------------------------------------------</li>
-            <li><?php echo e(__('SubTotal')); ?>:<span><?php echo e($order->totalWithCurrency()); ?></span></li>
-            <li><?php echo e(__('Coupon')); ?>:<span><?php echo e($order->totalCouponDiscount()); ?></span></li>
+            <li><?php echo e(__('SubTotal')); ?>:<span><?php echo e(number_format($order->details->sum('total_price'),2)); ?> ৳</span></li>
+            <li><?php echo e(__('Coupon')); ?>:<span><?php echo e(number_format($order->shipping_cost,2)); ?> ৳</span></li>
             
             <li>-------------------------------------------</li>
-            <li><?php echo e(__('Total')); ?>:<span><?php echo e($order->totalWithCurrency()); ?></span></li>
+            <li><?php echo e(__('Total')); ?>:<span><?php echo e(number_format($order->total_price,2)); ?> ৳</span></li>
         </ul>
     </div>
     <div class="signature">

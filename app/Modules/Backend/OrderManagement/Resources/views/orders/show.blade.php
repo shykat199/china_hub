@@ -429,14 +429,14 @@
                             </div>
                             <div class="mybazar-total-info">
                                 <ul>
-                                    <li>{{__('Item(s) Subtotal')}}:<span>{{ $order->productPriceWithCurrency() }}</span></li>
-                                    <li>{{__('Shipping Charge')}}:<span>{{ $order->costWithCurrency() }}</span></li>
+                                    <li>{{__('Item(s) Subtotal')}}:<span>{{number_format($order->details->sum('total_price'),2)}} ৳</span></li>
+                                    <li>{{__('Shipping Charge')}}:<span>{{number_format($order->shipping_cost,2)}} ৳</span></li>
                                     <li>-------------------------------------------</li>
-                                    <li>{{__('SubTotal')}}:<span>{{ $order->totalWithCurrency() }}</span></li>
-                                    <li>{{__('Coupon')}}:<span>{{ $order->totalCouponDiscount() }}</span></li>
+                                    <li>{{__('SubTotal')}}:<span>{{ number_format($order->details->sum('total_price'),2) }} ৳</span></li>
+                                    <li>{{__('Coupon')}}:<span>{{ number_format($order->shipping_cost,2) }} ৳</span></li>
                                     {{--  <li>{{__('Vat')}}:<span>{{ $order->totalVat() }}</span></li>  --}}
                                     <li>-------------------------------------------</li>
-                                    <li>{{__('Total')}}:<span>{{ $order->totalWithCurrency() }}</span></li>
+                                    <li>{{__('Total')}}:<span>{{ number_format($order->total_price,2) }} ৳</span></li>
                                 </ul>
                             </div>
                             <div class="signature">
@@ -604,13 +604,13 @@
     </div>
     <div class="mybazar-total-info" style="margin-bottom: 10px;">
         <ul style="list-style-type: none; padding: 0; border-top: 1px solid #ddd; padding-top: 5px; font-size: 10px;">
-            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('Item(s) Subtotal')}}:<span>{{ $order->productPriceWithCurrency() }}</span></li>
-            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('Shipping Charge')}}:<span>{{ $order->costWithCurrency() }}</span></li>
+            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('Item(s) Subtotal')}}:<span>{{number_format($order->details->sum('total_price'),2)}} ৳</span></li>
+            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('Shipping Charge')}}:<span>{{number_format($order->shipping_cost,2)}} ৳</span></li>
             <li style="border-top: 1px solid #ddd; margin: 3px 0;"></li>
-            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('SubTotal')}}:<span>{{ $order->totalWithCurrency() }}</span></li>
-            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('Coupon')}}:<span>{{ $order->totalCouponDiscount() }}</span></li>
+            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('SubTotal')}}:<span>{{ number_format($order->details->sum('total_price'),2) }} ৳</span></li>
+            <li style="display: flex; justify-content: space-between; margin-bottom: 3px;">{{__('Coupon')}}:<span>{{ number_format($order->shipping_cost,2) }} ৳</span></li>
             <li style="border-top: 1px solid #ddd; margin: 3px 0;"></li>
-            <li style="display: flex; justify-content: space-between; font-weight: bold; font-size: 12px;">{{__('Total')}}:<span>{{ $order->totalWithCurrency() }}</span></li>
+            <li style="display: flex; justify-content: space-between; font-weight: bold; font-size: 12px;">{{__('Total')}}:<span>{{ number_format($order->total_price,2) }} ৳</span></li>
         </ul>
     </div>
     <div class="signature" style="text-align: right; margin-top: 10px;">
