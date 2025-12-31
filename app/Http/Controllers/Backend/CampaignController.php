@@ -101,6 +101,7 @@ class CampaignController extends Controller
                                 <li>
                                              <form user="deleteForm" method="POST" action="' . route('backend.campaign.destroy', $record->id) . '">
                                                     ' . csrf_field() . method_field("DELETE") . '
+                                                    <input type="hidden" value="'.$record->id.'" name="hidden_id">
                                                     <a class="p-0 action" href="javascript:void(0);"
                                                        onclick="deleteWithSweetAlert(event,parentNode);">
                                                         <button title="Delete">

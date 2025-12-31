@@ -86,7 +86,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Backend', 'as' => 'backend.']
         Route::post('campaign/update', [CampaignController::class,'update'])->name('campaign.update');
         Route::post('campaign/inactive', [CampaignController::class,'inactive'])->name('campaign.inactive');
         Route::post('campaign/active', [CampaignController::class,'active'])->name('campaign.active');
-        Route::post('campaign/destroy', [CampaignController::class,'destroy'])->name('campaign.destroy');
+        Route::delete('campaign/destroy', [CampaignController::class,'destroy'])->name('campaign.destroy');
         Route::get('campaign/image/destroy', [CampaignController::class,'imgdestroy'])->name('campaign.image.destroy');
 
 
