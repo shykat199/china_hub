@@ -427,9 +427,9 @@ class OrderController extends Controller
                 if ($order && $request->status == 9 && $order->order_status != 9) {
                     $consignmentData = [
                         'invoice' => $order->order_no,
-                        'recipient_name' => $order->shipping ? $order->shipping->name : 'InboxHat',
-                        'recipient_phone' => $order->shipping ? $order->shipping->phone : '01750578495',
-                        'recipient_address' => $order->shipping ? $order->shipping->address : 'Address not provided',
+                        'recipient_name' => $order->shipping ? $order->shipping->name : ($order->shipping_name ? $order->shipping_name : 'Unknown'),
+                        'recipient_phone' => $order->shipping ? $order->shipping->phone : ($order->shipping_name ? $order->shipping_mobile : 'N/A'),
+                        'recipient_address' => $order->shipping ? $order->shipping->address : ($order->shipping_name ? ($order->shipping_address_1 .' '.  $order->shipping_address_2) : 'Unknown'),
                         'cod_amount' => $order->total_price
                     ];
 
@@ -683,8 +683,8 @@ class OrderController extends Controller
         $order_status = OrderStatus::where('name',$segment)->withCount('orders')->first();
         $order_overview = $order_status->orders_count;
         $record = $this->pendingOrderList($request);
-       $show_data = $record['record'] ?? [];
-       $totalRecords = $record['totalRecords'] ?? 0;
+        $show_data = $record['record'] ?? [];
+        $totalRecords = $record['totalRecords'] ?? 0;
         return view('ordermanagement::orders.pending_orders', compact('order_overview','show_data','totalRecords'));
     }
 
@@ -703,8 +703,8 @@ class OrderController extends Controller
 
         $query = Order::query();
         $query->whereHas('details', function ($query) {
-                $query->where('order_stat', 1);
-            });
+            $query->where('order_stat', 1);
+        });
         if (auth('seller')->user() && auth('seller')->user()->getRoleNames()->first() == 'Seller') {
             $query
                 ->whereHas('details', function ($query) {
@@ -717,12 +717,12 @@ class OrderController extends Controller
         $totalRecords = $query->count();
         if (!empty($searchValue)) {
             $query->where(function ($qry) use ($searchValue) {
-                    $qry->orWhere('order_no', 'like', '%' . $searchValue . '%');
-                    $qry->orWhere('user_first_name', 'like', '%' . $searchValue . '%');
-                    $qry->orWhere('user_last_name', 'like', '%' . $searchValue . '%');
-                    $qry->orWhere('created_at', 'like', '%' . $searchValue . '%');
-                    $qry->orWhere('id', 'like', '%' . $searchValue . '%');
-                });
+                $qry->orWhere('order_no', 'like', '%' . $searchValue . '%');
+                $qry->orWhere('user_first_name', 'like', '%' . $searchValue . '%');
+                $qry->orWhere('user_last_name', 'like', '%' . $searchValue . '%');
+                $qry->orWhere('created_at', 'like', '%' . $searchValue . '%');
+                $qry->orWhere('id', 'like', '%' . $searchValue . '%');
+            });
         }
         $records = $query
 //            ->orderBy($columnName, $columnSortOrder)
@@ -1596,8 +1596,8 @@ class OrderController extends Controller
         // specific seller
         if (auth('seller')->user() && auth('seller')->user()->getRoleNames()->first() == 'Seller') {
             $query->whereHas('details', function ($query) {
-                    $query->where('seller_id', 'like', '%' . auth()->id() . '%');
-                });
+                $query->where('seller_id', 'like', '%' . auth()->id() . '%');
+            });
         }
         // Total records
         $totalRecords = $query->count();
@@ -1754,8 +1754,8 @@ class OrderController extends Controller
 
         $query = Order::query();
         $query->whereHas('details', function ($query) {
-                $query->where('order_stat', 7);
-            });
+            $query->where('order_stat', 7);
+        });
 
         // specific seller
         if (auth('seller')->user() && auth('seller')->user()->getRoleNames()->first() == 'Seller') {
@@ -2228,7 +2228,7 @@ class OrderController extends Controller
     private function UpdateTotal($order_id)
     {
         $getDetails = OrderDetail::where('order_id', $order_id)->get();
-            $total = 0;
+        $total = 0;
         foreach ($getDetails as  $v) {
             $total += $v->sale_price * $v->qty;
         }
@@ -2290,9 +2290,9 @@ class OrderController extends Controller
                 } else {
                     $steadfastOrderData = [
                         'invoice' => $order->order_no ?? 'ORDER-' . time(),
-                        'recipient_name' => $order->shipping_address_1 ?? 'InboxHat',
+                        'recipient_name' => $order->shipping_name ?? 'Unknown',
                         'recipient_phone' => $order->shipping_mobile ?? '01750578495',
-                        'recipient_address' => 'Call on the mentioned mobile number ' . $order->shipping_mobile,
+                        'recipient_address' => $order->shipping_address_1 ?? 'Unknown',
                         'cod_amount' => $order->total_price,
                     ];
 
