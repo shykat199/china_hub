@@ -11,7 +11,7 @@
     <!-- Twitter Card Data -->
     <meta name="twitter:card" content="product">
     <meta name="twitter:site" content="<?php echo $__env->yieldContent('meta_url'); ?>">
-    <meta name="twitter:title" content="<?php echo $__env->yieldContent('meta_title','My Bazar'); ?>">
+    <meta name="twitter:title" content="<?php echo $__env->yieldContent('meta_title','China Hub Bd'); ?>">
     <meta name="twitter:description" content="<?php echo $__env->yieldContent('meta_description',maanAppearance('meta_desc')); ?>">
     <meta name="twitter:creator" content="Maan Theme">
     <meta name="twitter:image" content="<?php echo e(asset('uploads/products/meta_image')); ?>/<?php echo $__env->yieldContent('meta_image'); ?>">
