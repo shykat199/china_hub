@@ -429,7 +429,7 @@ class OrderController extends Controller
                         'invoice' => $order->order_no,
                         'recipient_name' => $order->shipping ? $order->shipping->name : ($order->shipping_name ? $order->shipping_name : 'Unknown'),
                         'recipient_phone' => $order->shipping ? $order->shipping->phone : ($order->shipping_name ? $order->shipping_mobile : 'N/A'),
-                        'recipient_address' => $order->shipping ? $order->shipping->address : ($order->shipping_name ? ($order->shipping_address_1 .' '.  $order->shipping_address_2) : 'Unknown'),
+                        'recipient_address' => $order->shipping ? $order->shipping->address : ($order->shipping_name ? $order->shipping_address_1 : 'Unknown'),
                         'cod_amount' => $order->total_price
                     ];
 
