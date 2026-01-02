@@ -266,8 +266,7 @@
                     <div class="contact-infos my-3">
                         <?php $__currentLoopData = getContactsInfos(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="single-item">
-                                <h6 class="d-inline-block my-1 contact-number"><?php echo e($item->value['number'] ?? ''); ?></h6>
-                                <small class="d-inline-block ms-2" style="font-size: 13px; font-weight: 700"><?php echo e($item->value['title'] ?? ''); ?></small>
+                                <h6 class="d-inline-block my-1 contact-number"><?php echo e($item->value['number'] ?? ''); ?></h6> <small class="d-inline-block ms-2" style="font-size: 13px; font-weight: 700"><?php echo e($item->value['title'] ?? ''); ?></small>
                             </div>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
@@ -483,40 +482,48 @@
             }
 
         });
-        $('.buynow-btn').on('click', function() {
-            let size = $('.size-vAreation').val();
-            let size_id = $('.size-vAreation').data('size_id');
-            let color = $('.color-vAreation').val();
-            let color_id = $('.color-vAreation').data('color_id');
+        $('.buynow-btn').on('click', function () {
+
             let buynow_qty = $('.input-number').val();
             let buynow_url = $(this).data('buynow-url');
             let area = $('[name="delivery_charge"]:checked').val();
-            if (color) {
-                if ($("input[name='color']:checked").length == 0) {
-                    Swal.fire({
-                        icon: 'warning',
-                        text: "<?php echo e(__('Please select a color')); ?>"
-                    });
 
-                    return false;
-                }
-            }
-            if (size) {
-                if ($("input[name='size']:checked").length == 0) {
-                    Swal.fire({
-                        icon: 'warning',
-                        text: "<?php echo e(__('Please select a size')); ?>"
-                    });
+            // COLOR
+            let colorInput = $("input[name='color']:checked");
+            let color = colorInput.val() || '';
+            let color_id = colorInput.data('color_id') || '';
 
-                    return false;
-                }
-            }
-            /* if($("input[name='delivery_charge']:checked").length == 0){
-                    swal("<?php echo e(__('Please select delivery charge')); ?>");
+            if ($("input[name='color']").length && !color) {
+                Swal.fire({
+                    icon: 'warning',
+                    text: "<?php echo e(__('Please select a color')); ?>"
+                });
                 return false;
-            } */
+            }
 
-            let url = buynow_url + '&qty=' + buynow_qty + '&area=' + area + '&color_id=' + color_id + '&color=' + color + '&size_id=' + size_id + '&size=' + size;
+            // SIZE
+            let sizeInput = $("input[name='size']:checked");
+            let size = sizeInput.val() || '';
+            let size_id = sizeInput.data('size_id') || '';
+
+            if ($("input[name='size']").length && !size) {
+                Swal.fire({
+                    icon: 'warning',
+                    text: "<?php echo e(__('Please select a size')); ?>"
+                });
+                return false;
+            }
+
+            // BUILD URL
+            let url =
+                buynow_url +
+                '&qty=' + buynow_qty +
+                '&area=' + area +
+                '&color_id=' + color_id +
+                '&color=' + encodeURIComponent(color) +
+                '&size_id=' + size_id +
+                '&size=' + encodeURIComponent(size);
+
             window.location.href = url;
         });
         $('.maan-cartbtn').on('click', function() {
