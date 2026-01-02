@@ -15,18 +15,17 @@
                         </div>
                     </div>
                 </div>
+                @php
+                    $products = \App\Models\Frontend\Product::where('category_id', $category->id)
+                ->where('quantity', '>', 0)
+                ->limit(6)
+                ->get();
+                @endphp
                 <div class="row auto-margin-3">
-                    @php $n = 0; @endphp
-                    @foreach($category->products as $product)
-                    @if($product->quantity > 0)
-                    @php $n++; @endphp
-                    @if($n == 7)
-                    @break
-                    @endif
+                    @foreach($products as $product)
                         <div class="col-6 col-sm-4 col-md-4 col-lg-2">
-                            <x-frontend.product-card :product="$product"></x-frontend.product-card>
+                            <x-frontend.product-card :product="$product" />
                         </div>
-                    @endif
                     @endforeach
                 </div>
             </div>
